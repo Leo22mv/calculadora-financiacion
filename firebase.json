@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/calculadora-financiacion",
+    "public": "dist/calculadora-financiacion/browser",
     "ignore": [
       "firebase.json",
       "**/.*",

@@ -1,0 +1,1 @@
+Arreglar ancho cuando aparece mensaje de respuesta o error

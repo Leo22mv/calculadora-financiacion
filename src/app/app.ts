@@ -21,7 +21,11 @@ export class App {
   cuota: number | undefined;
   meses: number | undefined;
 
+  cuotasDisabled: boolean = false;
+  mesesDisabled: boolean = false;
+
   resultado: string | undefined;
+  error: string | undefined;
 
   calcular() {
     if (this.monto && this.interes && this.meses) {
@@ -45,6 +49,35 @@ export class App {
       }
       this.meses = mesesCalculados;
       this.resultado = `Con una cuota de ${this.cuota.toFixed(2)}, el préstamo se pagará en ${mesesCalculados} meses.`;
+      this.error = undefined;
+    }
+
+    if (!this.monto || !this.interes || (!this.cuota && !this.meses)) {
+      this.error = 'Por favor, complete todos los campos necesarios para el cálculo.';
+      this.resultado = undefined;
+    }
+  }
+
+  validarCuotaYMeses() {
+    if (this.cuota && !this.meses) {
+      if (!this.cuotasDisabled) {
+        this.mesesDisabled = true;
+      } else {
+        this.cuotasDisabled = false;
+        this.cuota = undefined;
+      }
+    }
+    if (this.meses && !this.cuota) {
+      if (!this.mesesDisabled) {
+        this.cuotasDisabled = true;
+      } else {
+        this.mesesDisabled = false;
+        this.meses = undefined;
+      }
+    }
+    if (!this.meses && !this.cuota) {
+      this.cuotasDisabled = false;
+      this.mesesDisabled = false;
     }
   }
 }

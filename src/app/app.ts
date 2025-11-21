@@ -80,4 +80,26 @@ export class App {
       this.mesesDisabled = false;
     }
   }
+
+  onInput(event: any) {
+    const input = event.target.value;
+
+    // quitar comas antes de procesar
+    const numeric = input.replace(/,/g, '');
+
+    // si no es número, salir
+    if (isNaN(Number(numeric))) {
+      event.target.value = '';
+      return;
+    }
+
+    // guardar valor crudo (para enviar al backend)
+    let rawValue = Number(numeric);
+
+    // formatear con comas
+    let formattedValue = Number(numeric).toLocaleString('en-US');
+
+    // actualizar campo mostrado
+    event.target.value = formattedValue;
+  }
 }

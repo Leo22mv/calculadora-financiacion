@@ -41,14 +41,23 @@
       <div class="form-group">
           <label for="monto">Monto</label>
           <div class="input-wrapper">
-              <input
+              <!-- <input
                   [(ngModel)]="monto"
                   type="number"
                   id="monto"
                   name="monto"
                   placeholder="Inserte el monto a financiar"
                   step="1"
-              >
+              > -->
+              <input
+                type="text"
+                (input)="onInput($event)"
+                [(ngModel)]="monto"
+                id="monto"
+                name="monto"
+                placeholder="Inserte el monto a financiar"
+                step="1"
+              />
           </div>
       </div>
 

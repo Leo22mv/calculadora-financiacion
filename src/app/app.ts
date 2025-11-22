@@ -16,9 +16,9 @@ import { RouterOutlet } from '@angular/router';
 export class App {
   protected readonly title = signal('calculadora-financiacion');
 
-  monto: number | undefined;
+  monto: string | undefined;
   interes: number | undefined;
-  cuota: number | undefined;
+  cuota: any;
   meses: number | undefined;
 
   cuotasDisabled: boolean = false;
@@ -28,28 +28,48 @@ export class App {
   error: string | undefined;
 
   calcular() {
-    if (this.monto && this.interes && this.meses) {
-      const interesFinanciado = (this.interes / 100) * this.meses;
-      const totalAFinanciar = this.monto + (this.monto * interesFinanciado);
-      this.cuota = totalAFinanciar / this.meses;
-      this.resultado = `El monto a financiar es de ${totalAFinanciar.toFixed(2)} y la cuota mensual es de ${this.cuota.toFixed(2)}`;
-    }
+    if (this.monto) {
+      const monto: number = Number(this.monto.replace(/,/g, ''));
+      console.log('Monto procesado:', monto);
+      if (this.interes && this.meses) {
+        const interesFinanciado = (this.interes / 100) * this.meses;
+        // console.log('monto -> {}', monto);
+        const totalAFinanciar: number = Number(monto + (monto * interesFinanciado));
 
-    if (this.monto && this.interes && this.cuota) {
-      let mesesCalculados = 1;
-      let cuotaCalculada = 0;
-
-      while (mesesCalculados < 1000) { // límite para evitar bucle infinito
-        const interesFinanciado = (this.interes / 100) * mesesCalculados;
-        const totalAFinanciar = this.monto + (this.monto * interesFinanciado);
-        cuotaCalculada = totalAFinanciar / mesesCalculados;
-
-        if (cuotaCalculada <= this.cuota) break;
-        mesesCalculados++;
+        this.cuota = (totalAFinanciar / this.meses);
+        const objetoCuotaSinComas = { target: { value: this.cuota.toString() } }
+        this.onInput(objetoCuotaSinComas);
+        this.cuota = objetoCuotaSinComas.target.value;
+        this.resultado = `El monto a financiar es de ${totalAFinanciar.toFixed(2)} y la cuota mensual es de ${this.cuota}`;
       }
-      this.meses = mesesCalculados;
-      this.resultado = `Con una cuota de ${this.cuota.toFixed(2)}, el préstamo se pagará en ${mesesCalculados} meses.`;
-      this.error = undefined;
+
+      if (this.interes && this.cuota) {
+        const cuota: number = Number(this.cuota.replace(/,/g, ''));
+        let mesesCalculados = 1;
+        let cuotaCalculada = 0;
+
+        while (mesesCalculados < 120) {
+          const interesFinanciado = (this.interes / 100) * mesesCalculados;
+          const totalAFinanciar: number = monto + (monto * interesFinanciado);
+          cuotaCalculada = totalAFinanciar / mesesCalculados;3
+          // console.log('cuotaCalculada -> ', cuotaCalculada);
+
+          if (cuotaCalculada <= cuota) break;
+
+          mesesCalculados++;
+
+          if (mesesCalculados == 120) {
+            this.cuota = Number(cuotaCalculada).toFixed(2).toString();
+            const objetoCuotaSinComas = { target: { value: this.cuota.toString() } }
+            this.onInput(objetoCuotaSinComas);
+            this.cuota = objetoCuotaSinComas.target.value;
+            break;
+          }
+        }
+        this.meses = mesesCalculados;
+        this.resultado = `Con una cuota de ${this.cuota}, el préstamo se pagará en ${mesesCalculados} meses.`;
+        this.error = undefined;
+      }
     }
 
     if (!this.monto || !this.interes || (!this.cuota && !this.meses)) {
@@ -98,6 +118,10 @@ export class App {
 
     // formatear con comas
     let formattedValue = Number(numeric).toLocaleString('en-US');
+
+    if (formattedValue === '0') {
+      return;
+    }
 
     // actualizar campo mostrado
     event.target.value = formattedValue;

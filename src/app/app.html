@@ -41,14 +41,6 @@
       <div class="form-group">
           <label for="monto">Monto</label>
           <div class="input-wrapper">
-              <!-- <input
-                  [(ngModel)]="monto"
-                  type="number"
-                  id="monto"
-                  name="monto"
-                  placeholder="Inserte el monto a financiar"
-                  step="1"
-              > -->
               <input
                 inputmode="decimal"
                 type="text"
@@ -66,6 +58,7 @@
           <label for="interes">Interés mensual (%)</label>
           <div class="input-wrapper">
               <input
+                  inputmode="decimal"
                   [(ngModel)]="interes"
                   type="number"
                   id="interes"
@@ -80,8 +73,10 @@
           <label for="cuota">Valor de cuota</label>
           <div class="input-wrapper">
               <input
+                  (input)="onInput($event)"
+                  inputmode="decimal"
                   [(ngModel)]="cuota"
-                  type="number"
+                  type="text"
                   id="cuota"
                   name="cuota"
                   placeholder="Inserte el valor de cuota"
@@ -96,6 +91,7 @@
           <label for="meses">Meses a financiar</label>
           <div class="input-wrapper">
               <input
+                  inputmode="decimal"
                   [(ngModel)]="meses"
                   type="number"
                   id="meses"
